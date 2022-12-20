@@ -139,4 +139,93 @@ id_buyer(integer) - простой, однозначный атрибут, в к
 Запросы
 ---
 
+1. Игры дороже 2000 рублей, отсортированные по цене по убыванию
+```sql
+SELECT name, price
+FROM game
+WHERE price > 2000
+ORDER BY price DESC
+```
 
+2. Какие магазины находятся в Москве?
+```sql
+SELECT city, address
+FROM shop
+WHERE city = 'Москва'
+```
+
+3. Кто работает на Кантемировской 3а?
+```sql
+SELECT employee.fio 
+FROM employee, shop 
+WHERE (employee.id_shop = shop.id_shop and shop.address='ул. Кантемировская, д.3а')
+```
+
+4. Какие игры принадлежат издательству “Звезда”?
+```sql
+SELECT game.name
+FROM publisher LEFT JOIN game ON publisher.name='Звезда' AND publisher.id_publisher = game.id_publisher
+```
+
+5. Сколько стоят игры издателя “Смарт”?
+```sql
+SELECT game."name", price, amount, price*amount as sum
+FROM game JOIN publisher ON publisher.id_publisher = game.id_publisher
+WHERE publisher."name" = 'Смарт'
+```
+
+6. Список покупателей, зарегистрировавшихся после 01.01.2014
+
+```sql
+SELECT *
+FROM buyer
+WHERE registration > '2014-01-01'
+```
+
+7. Статус заказов от 15.10.2013
+```sql
+SELECT id_orders, orders_date, status
+FROM order_status JOIN orders ON orders.id_order_status = order_status.id_order_status
+WHERE orders_date = '2013-10-15'
+```
+
+8. Какие игры издателя “Смарт” сейчас есть в наличии?
+```sql
+SELECT game.name, publisher.name, amount, price
+FROM publisher INNER JOIN game ON publisher.id_publisher = game.id_publisher
+WHERE publisher.name = 'Смарт'
+ORDER BY amount DESC
+```
+
+9. Топ-3 самых популярных жанра недели
+```sql
+SELECT genre, amount, orders_date
+FROM game_genre, game, orders
+WHERE orders_date < '2014-12-08'
+ORDER BY amount DESC
+LIMIT 3
+```
+
+10. В какой день недели какой жанр продавался?
+```sql
+SELECT publisher.name, genre, amount, EXTRACT(isodow FROM orders_date) as day_of_week
+FROM publisher 
+INNER JOIN game ON publisher.id_publisher = game.id_publisher 
+INNER JOIN game_genre ON game.id_game_genre = game_genre.id_game_genre 
+INNER JOIN orders ON game.id_game = orders.id_game 
+ORDER BY amount DESC  
+```
+
+11. Каких игр нет в наличии?
+```sql
+SELECT game.name, amount
+FROM game
+WHERE amount = 0
+```
+
+12. Игры для детей младше 6 лет
+```sql
+SELECT game.name, age
+FROM game JOIN age_restriction ON age_restriction.id_age_restriction = game.id_age_restriction
+WHERE age < 6
+```
