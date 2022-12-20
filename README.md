@@ -146,6 +146,12 @@ FROM game
 WHERE price > 2000
 ORDER BY price DESC
 ```
+<details>
+  <summary>
+    Результат
+  </summary>
+  ![1](https://user-images.githubusercontent.com/120600282/208690066-c79bf906-0299-46a4-9eee-649cc16c81e1.jpg)
+</details>
 
 2. Какие магазины находятся в Москве?
 ```sql
@@ -153,6 +159,12 @@ SELECT city, address
 FROM shop
 WHERE city = 'Москва'
 ```
+<details>
+  <summary>
+    Результат
+  </summary>
+  ![2](https://user-images.githubusercontent.com/120600282/208690096-a71b97a9-8382-4e36-8d55-ff943df8a395.jpg)
+</details>
 
 3. Кто работает на Кантемировской 3а?
 ```sql
@@ -160,12 +172,24 @@ SELECT employee.fio
 FROM employee, shop 
 WHERE (employee.id_shop = shop.id_shop and shop.address='ул. Кантемировская, д.3а')
 ```
+<details>
+  <summary>
+    Результат
+  </summary>
+  ![3](https://user-images.githubusercontent.com/120600282/208690129-15f85687-665d-4b9f-8cfc-dc94fd499380.jpg)
+</details>
 
 4. Какие игры принадлежат издательству “Звезда”?
 ```sql
 SELECT game.name
 FROM publisher LEFT JOIN game ON publisher.name='Звезда' AND publisher.id_publisher = game.id_publisher
 ```
+<details>
+  <summary>
+    Результат
+  </summary>
+  ![4](https://user-images.githubusercontent.com/120600282/208690162-2bf3284d-dbfd-43b1-997a-7fb945b9acbc.jpg)
+</details>
 
 5. Сколько стоят игры издателя “Смарт”?
 ```sql
@@ -173,6 +197,12 @@ SELECT game."name", price, amount, price*amount as sum
 FROM game JOIN publisher ON publisher.id_publisher = game.id_publisher
 WHERE publisher."name" = 'Смарт'
 ```
+<details>
+  <summary>
+    Результат
+  </summary>
+  ![5](https://user-images.githubusercontent.com/120600282/208690254-a3a794ba-e84e-4e22-8c4c-6e7855afae03.jpg)
+</details>
 
 6. Список покупателей, зарегистрировавшихся после 01.01.2014
 
@@ -181,6 +211,12 @@ SELECT *
 FROM buyer
 WHERE registration > '2014-01-01'
 ```
+<details>
+  <summary>
+    Результат
+  </summary>
+  ![6](https://user-images.githubusercontent.com/120600282/208690275-9e9def81-1987-4848-9f3c-4e227eb5843a.jpg)
+</details>
 
 7. Статус заказов от 15.10.2013
 ```sql
@@ -188,14 +224,26 @@ SELECT id_orders, orders_date, status
 FROM order_status JOIN orders ON orders.id_order_status = order_status.id_order_status
 WHERE orders_date = '2013-10-15'
 ```
+<details>
+  <summary>
+    Результат
+  </summary>
+  ![7](https://user-images.githubusercontent.com/120600282/208690293-3ecd0067-b3ce-466a-8f9e-336dfea65fc3.jpg)
+</details>
 
 8. Какие игры издателя “Смарт” сейчас есть в наличии?
 ```sql
 SELECT game.name, publisher.name, amount, price
 FROM publisher INNER JOIN game ON publisher.id_publisher = game.id_publisher
-WHERE publisher.name = 'Смарт'
+WHERE publisher.name = 'Смарт' AND game.amount > 0
 ORDER BY amount DESC
 ```
+<details>
+  <summary>
+    Результат
+  </summary>
+  ![8](https://user-images.githubusercontent.com/120600282/208690320-32b278cf-b68e-4293-b8e0-ff8bf0b368c1.jpg)
+</details>
 
 9. Топ-3 самых популярных жанра недели
 ```sql
@@ -205,6 +253,12 @@ WHERE orders_date < '2014-12-08'
 ORDER BY amount DESC
 LIMIT 3
 ```
+<details>
+  <summary>
+    Результат
+  </summary>
+  ![9](https://user-images.githubusercontent.com/120600282/208690346-820231b1-1974-4aab-b1e1-98f443b6b15e.jpg)
+</details>
 
 10. В какой день недели какой жанр продавался?
 ```sql
@@ -215,6 +269,12 @@ INNER JOIN game_genre ON game.id_game_genre = game_genre.id_game_genre
 INNER JOIN orders ON game.id_game = orders.id_game 
 ORDER BY amount DESC  
 ```
+<details>
+  <summary>
+    Результат
+  </summary>
+  ![10](https://user-images.githubusercontent.com/120600282/208690385-b5899dad-8d28-4993-b127-51fb1bf68965.jpg)
+</details>
 
 11. Каких игр нет в наличии?
 ```sql
@@ -222,6 +282,12 @@ SELECT game.name, amount
 FROM game
 WHERE amount = 0
 ```
+<details>
+  <summary>
+    Результат
+  </summary>
+  ![11](https://user-images.githubusercontent.com/120600282/208690412-a09a1323-d1be-49e9-9d2c-d5edbfc34de8.jpg)
+</details>
 
 12. Игры для детей младше 6 лет
 ```sql
@@ -229,3 +295,9 @@ SELECT game.name, age
 FROM game JOIN age_restriction ON age_restriction.id_age_restriction = game.id_age_restriction
 WHERE age < 6
 ```
+<details>
+  <summary>
+    Результат
+  </summary>
+  ![12](https://user-images.githubusercontent.com/120600282/208690432-d417439f-7e89-45db-86fd-655209ad69c0.jpg)
+</details>
