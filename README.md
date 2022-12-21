@@ -182,7 +182,8 @@ WHERE (employee.id_shop = shop.id_shop and shop.address='ул. Кантемир�
 4. Какие игры принадлежат издательству “Звезда”?
 ```sql
 SELECT game.name
-FROM publisher LEFT JOIN game ON publisher.name='Звезда' AND publisher.id_publisher = game.id_publisher
+FROM publisher LEFT JOIN game ON publisher.id_publisher = game.id_publisher
+WHERE publisher.name='Звезда'
 ```
 <details>
   <summary>
@@ -209,7 +210,7 @@ WHERE publisher."name" = 'Смарт'
 ```sql
 SELECT *
 FROM buyer
-WHERE registration > '2014-01-01'
+WHERE DATE(registration) > '2014-01-01'
 ```
 <details>
   <summary>
@@ -222,7 +223,7 @@ WHERE registration > '2014-01-01'
 ```sql
 SELECT id_orders, orders_date, status
 FROM order_status JOIN orders ON orders.id_order_status = order_status.id_order_status
-WHERE orders_date = '2013-10-15'
+WHERE DATE(orders_date) = '2013-10-15'
 ```
 <details>
   <summary>
@@ -245,29 +246,33 @@ ORDER BY amount DESC
   ![8](https://user-images.githubusercontent.com/120600282/208690320-32b278cf-b68e-4293-b8e0-ff8bf0b368c1.jpg)
 </details>
 
-9. Топ-3 самых популярных жанра недели
+9. Топ-3 самых популярных жанра недели (так как данных мало, результат один)
 ```sql
 SELECT genre, amount, orders_date
-FROM game_genre, game, orders
-WHERE orders_date < '2014-12-08'
-ORDER BY amount DESC
+FROM game_genre 
+JOIN game 
+ON game.id_game_genre = game_genre.id_game_genre
+JOIN orders
+ON game.id_game = orders.id_game
+WHERE DATE(orders_date) < '2014-12-08' AND DATE(orders_date) > '2014-11-30'
+ORDER BY orders_date DESC
 LIMIT 3
 ```
 <details>
   <summary>
     Результат
   </summary>
-  ![9](https://user-images.githubusercontent.com/120600282/208690346-820231b1-1974-4aab-b1e1-98f443b6b15e.jpg)
+  ![Снимок экрана (38)](https://user-images.githubusercontent.com/120600282/208790443-95c60249-18d0-4a7b-a88a-9a18dd69f09b.png)
 </details>
 
 10. В какой день недели какой жанр продавался?
 ```sql
-SELECT publisher.name, genre, amount, EXTRACT(isodow FROM orders_date) as day_of_week
+SELECT publisher.name, genre, amount, DATE_PART('isodow', DATE(orders_date)) as day_of_week
 FROM publisher 
 INNER JOIN game ON publisher.id_publisher = game.id_publisher 
 INNER JOIN game_genre ON game.id_game_genre = game_genre.id_game_genre 
 INNER JOIN orders ON game.id_game = orders.id_game 
-ORDER BY amount DESC  
+ORDER BY amount DESC
 ```
 <details>
   <summary>
@@ -278,15 +283,18 @@ ORDER BY amount DESC
 
 11. Каких игр нет в наличии?
 ```sql
-SELECT game.name, amount
-FROM game
-WHERE amount = 0
+SELECT game.name, amount, gamestatus
+FROM game 
+JOIN game_status 
+ON game_status.id_game_status = game.id_game_status
+WHERE gamestatus = 'Нет в наличии'
+ORDER BY amount DESC
 ```
 <details>
   <summary>
     Результат
   </summary>
-  ![11](https://user-images.githubusercontent.com/120600282/208690412-a09a1323-d1be-49e9-9d2c-d5edbfc34de8.jpg)
+  ![Снимок экрана (39)](https://user-images.githubusercontent.com/120600282/208790571-02288f18-14ea-4520-8edf-a5c738a2aab1.png)
 </details>
 
 12. Игры для детей младше 6 лет
